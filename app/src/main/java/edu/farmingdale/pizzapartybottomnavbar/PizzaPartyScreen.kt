@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.lifecycle.ViewModel
 import kotlin.math.ceil
 
 // ToDo 6: Add another level of hunger that is Hungry that is in between Medium and Very hungry
@@ -32,8 +33,12 @@ import kotlin.math.ceil
 // ToDo 7: Using the ViewModel class, create a new ViewModel class called PizzaPartyViewModel as
 // a subclass of ViewModel. Add the following properties to the PizzaPartyViewModel - see Brightspace
 
+class PizzaPartyViewModel : ViewModel() {
+    var hungerLevel by mutableStateOf("Medium")
+}
+
 @Composable
-fun PizzaPartyScreen( modifier: Modifier = Modifier) {
+fun PizzaPartyScreen(modifier: Modifier = Modifier) {
     var totalPizzas by remember { mutableIntStateOf(0) }
     var numPeopleInput by remember { mutableStateOf("") }
     var hungerLevel by remember { mutableStateOf("Medium") }
@@ -54,7 +59,7 @@ fun PizzaPartyScreen( modifier: Modifier = Modifier) {
         )
         RadioGroup(
             labelText = "How hungry?",
-            radioOptions = listOf("Light", "Medium", "Very hungry"),
+            radioOptions = listOf("Light", "Hungry", "Medium", "Very hungry"), // Updated here
             selectedOption = hungerLevel,
             onSelected = { hungerLevel = it },
             modifier = modifier
@@ -65,15 +70,11 @@ fun PizzaPartyScreen( modifier: Modifier = Modifier) {
             modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
         )
         Button(
-            onClick = {            totalPizzas = calculateNumPizzas(numPeopleInput.toInt(),
-                hungerLevel)
-
-            },
+            onClick = { totalPizzas = calculateNumPizzas(numPeopleInput.toInt(), hungerLevel) },
             modifier = modifier.fillMaxWidth()
         ) {
             Text("Calculate")
         }
-
     }
 }
 
@@ -133,7 +134,6 @@ fun RadioGroup(
     }
 }
 
-
 fun calculateNumPizzas(
     numPeople: Int,
     hungerLevel: String
@@ -141,10 +141,10 @@ fun calculateNumPizzas(
     val slicesPerPizza = 8
     val slicesPerPerson = when (hungerLevel) {
         "Light" -> 2
-        "Medium" -> 3
+        "Hungry" -> 3
+        "Medium" -> 4
         else -> 5
     }
 
     return ceil(numPeople * slicesPerPerson / slicesPerPizza.toDouble()).toInt()
 }
-

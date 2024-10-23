@@ -1,9 +1,7 @@
 package edu.farmingdale.pizzapartybottomnavbar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,7 +17,6 @@ import androidx.compose.ui.unit.dp
 
 // ToDo 5:  Add the GpaAppScreen composable button that clears the input fields when clicked
 
-
 @Composable
 fun GpaAppScreen() {
 
@@ -27,47 +24,63 @@ fun GpaAppScreen() {
     var grade2 by remember { mutableStateOf("") }
     var grade3 by remember { mutableStateOf("") }
 
-
-    // Declare variables for GPA result and background color
     var gpa by remember { mutableStateOf("") }
     var backColor by remember { mutableStateOf(Color.White) }
-    var btnLabel by remember { mutableStateOf("Calulate GPA") }
+    var btnLabel by remember { mutableStateOf("Compute GPA") }
 
     Column(
         modifier = Modifier
-        ,verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .background(Color.Cyan)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         TextField(
             value = grade1,
-            onValueChange = { grade1 = it },Modifier.padding(16.dp),
-            label = { Text("Course 1 Grade")}
+            onValueChange = { grade1 = it },
+            label = { Text("Course 1 Grade") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = androidx.compose.ui.text.input.ImeAction.Next
+            )
         )
-
 
         TextField(
             value = grade2,
             onValueChange = { grade2 = it },
             label = { Text("Course 2 Grade") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = androidx.compose.ui.text.input.ImeAction.Next
+            )
         )
-
-
 
         TextField(
             value = grade3,
             onValueChange = { grade3 = it },
             label = { Text("Course 3 Grade") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = androidx.compose.ui.text.input.ImeAction.Done
+            )
         )
-
 
         Button(onClick = {
             if (btnLabel == "Compute GPA") {
-
                 val gpaVal = calGPA(grade1, grade2, grade3)
                 if (gpaVal != null) {
                     gpa = gpaVal.toString()
-
-                    // Change background color based on GPA
                     backColor = when {
                         gpaVal < 60 -> Color.Red
                         gpaVal in 60.0..79.0 -> Color.Yellow
@@ -78,7 +91,6 @@ fun GpaAppScreen() {
                     gpa = "Invalid input"
                 }
             } else {
-                // Reset all value to none
                 grade1 = ""
                 grade2 = ""
                 grade3 = ""
@@ -90,18 +102,17 @@ fun GpaAppScreen() {
             Text(btnLabel)
         }
 
-
         if (gpa.isNotEmpty()) {
-            Text(text = "GPA: $gpa")
+            Text(text = "GPA: $gpa", modifier = Modifier.padding(top = 16.dp))
         }
-
-
     }
 }
 
-
-fun calGPA(grade1: String, grade2: String, grade3: String): Double {
-    val grades = listOf(grade1.toDouble(), grade2.toDouble(), grade3.toDouble())
-    return grades.average()
+fun calGPA(grade1: String, grade2: String, grade3: String): Double? {
+    return try {
+        val grades = listOf(grade1.toDouble(), grade2.toDouble(), grade3.toDouble())
+        grades.average()
+    } catch (e: NumberFormatException) {
+        null
+    }
 }
-
