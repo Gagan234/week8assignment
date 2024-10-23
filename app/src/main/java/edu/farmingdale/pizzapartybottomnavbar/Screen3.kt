@@ -38,7 +38,7 @@ fun Screen3() {
     val brushColor = arrayOf(0.0f to Color.White, 0.2f to Color.LightGray, 1f to Color.White)
 
     val context = LocalContext.current
-    Column ( modifier = Modifier.padding(horizontal = 20.dp).fillMaxSize()
+    Column ( modifier = Modifier.padding(horizontal = 1.dp).fillMaxSize()
         .background(Brush.verticalGradient(colorStops = brushColor)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally){
